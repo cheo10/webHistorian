@@ -28,6 +28,8 @@ exports.initialize = function(pathsObj) {
 exports.readListOfUrls = function(callback) {
   fs.readFile(exports.paths.list, 'utf8', function(err, data) {
     if(err) console.log(err);
+    data = data.trim().split('\n');
+
     callback(data);
   });
 };
