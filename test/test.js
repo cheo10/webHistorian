@@ -25,7 +25,7 @@ describe('server', function() {
     });
   });
 
-  xdescribe('archived websites', function () {
+  describe('archived websites', function () {
     describe('GET', function () {
       it('should return the content of a website from the archive', function (done) {
         var fixtureName = 'www.google.com';
@@ -149,6 +149,7 @@ describe('archive helpers', function() {
 
       // Ugly hack to wait for all downloads to finish.
       setTimeout(function () {
+        //console.log(fs.readdirSync(archive.paths.archivedSites));
         expect(fs.readdirSync(archive.paths.archivedSites)).to.deep.equal(urlArray);
         done();
       }, 500);

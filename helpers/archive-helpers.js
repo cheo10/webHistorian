@@ -10,7 +10,7 @@ var _ = require('underscore');
  */
 
 exports.paths = {
-  siteAssets: path.join(__dirname, '../web/public'),
+  siteAssets: path.join(__dirname, '../web/public'), //our index.html, etc location
   archivedSites: path.join(__dirname, '../archives/sites'),
   list: path.join(__dirname, '../archives/sites.txt')
 };
@@ -29,19 +29,42 @@ exports.readListOfUrls = function(callback) {
   fs.readFile(exports.paths.list, 'utf8', function(err, data) {
     if(err) console.log(err);
     data = data.trim().split('\n');
-
     callback(data);
   });
 };
 
-exports.isUrlInList = function() {
+exports.isUrlInList = function(site, callback) {
+  exports.readListOfUrls(function(data) {
+    data.indexOf(site) === -1 ? callback(false) : callback(true);
+  })
 };
 
-exports.addUrlToList = function() {
+exports.addUrlToList = function(site, callback) {
+  exports.isUrlInList(site, function(is){
+    if(!is){
+      fs.appendFile(exports.paths.list, site + '\n', function(err){
+        if(err) console.log(err);
+        callback();
+        console.log('URL added!')
+      });
+    }
+  });
 };
 
-exports.isUrlArchived = function() {
+exports.isUrlArchived = function(site, callback) {
+  fs.access(exports.paths.archivedSites + '/' + site, fs.W_OK, function(err){
+    err ? callback(false) : callback(true)
+  });
 };
 
-exports.downloadUrls = function() {
+exports.downloadUrls = function(urlArray) {
+  urlArray.forEach(function(element){
+    exports.isUrlArchived(element, function(is){
+      if(!is){
+        fs.mkdir(exports.paths.archivedSites + '/' + element, function(err){
+          if(err) console.log('Error: ', err);
+        });
+      }
+    })
+  });
 };

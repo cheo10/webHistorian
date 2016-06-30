@@ -17,8 +17,11 @@ exports.serveAssets = function(res, asset, callback) {
   //callback for reading file and insert into response
 
   fs.readFile(asset, function(err, data){
-    if(err) console.log(err);
-    callback(data);
+    if(err) {
+      var statusCode = 404;
+      res.writeHead(statusCode, exports.headers);
+      res.end('resource not found!');
+    } else callback(data);
   });
 };
 
