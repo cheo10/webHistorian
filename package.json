@@ -2,7 +2,6 @@
   "name": "web-historian",
   "version": "1.1.0",
   "description": "A web service that archives sites on the internet",
-  "author": "Hack Reactor <curriculum.team@hackreactor.com>",
   "license": "UNLICENSED",
   "private": true,
   "engines": {
