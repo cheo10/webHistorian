@@ -1,7 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
-var http = require('http');
+var request = require('request');
 
 
 /*
@@ -59,24 +59,20 @@ exports.isUrlArchived = function(site, callback) {
   });
 };
 
-exports.downloadUrls = function(urlArray) {
+exports.downloadUrls = function(urlArray, callback) {
   urlArray.forEach(function(element){
-    exports.isUrlArchived(element, function(is){
+    exports.isUrlArchived(element, function(is){exports.paths.arch
       if(!is){
         fs.mkdir(exports.paths.archivedSites + '/' + element, function(err){
           if(err) {
             console.log('Error: ', err);
           } else {
-            var file = fs.createWriteStream(exports.paths.archivedSites + '/' + element + '/data.html');
-            console.log('writing file')
-            http.get('http://' + element, function(response) {
-              console.log('getting http')
-              response.pipe(file);
+            request({ uri: 'http://' + element}, function(error, response, body) {
+              //console.log(response) returns entire response: headers + body
+              fs.writeFile(exports.paths.archivedSites + '/' + element + '/data.html', body);
             })
           }
-
         });
-
       }
     })
   });

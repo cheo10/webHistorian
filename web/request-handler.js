@@ -19,8 +19,7 @@ exports.handleRequest = function (req, res) {
         archive.addUrlToList(data, function() {
           res.writeHead(302, headers);
           res.end();
-        })
-
+        });
       })
     } else {
 
